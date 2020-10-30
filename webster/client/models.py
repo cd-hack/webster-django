@@ -3,7 +3,6 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseU
 from user.models import OrderProduct
 # Create your models here.
 
-
 class ClientProfileManager(BaseUserManager):
     def create_user(self, email, name, phone, accNo, ifsc, plan, password=None):
         if not email:
@@ -13,7 +12,6 @@ class ClientProfileManager(BaseUserManager):
                           accNo=accNo, ifsc=ifsc, plan=plan)
         user.set_password(password)
         user.save(using=self._db)
-
         return user
 
     def create_superuser(self, *args, **kwargs):
@@ -63,7 +61,7 @@ class FashionProduct(models.Model):
 
 class FoodProduct(models.Model):
     veg = models.BooleanField()
-    ftype = models.IntegerField()
+    foodType = models.IntegerField()
     category = models.ManyToManyField(Category)
 
 
@@ -71,10 +69,8 @@ class Product(models.Model):
     name = models.CharField(max_length=50)
     price = models.DecimalField(decimal_places=2, max_digits=8)
     description = models.TextField()
-    orderproduct = models.ForeignKey(
-        OrderProduct, on_delete=models.CASCADE, null=True)
     website = models.ForeignKey(Website, on_delete=models.CASCADE)
-    ptype = models.IntegerField()
+    productType = models.IntegerField()
     fashion = models.OneToOneField(
         FashionProduct, on_delete=models.CASCADE, null=True)
     food = models.OneToOneField(
