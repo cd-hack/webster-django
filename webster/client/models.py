@@ -28,7 +28,7 @@ class ClientProfile(AbstractBaseUser, PermissionsMixin):
     phone = models.CharField(max_length=10, unique=True)
     email = models.EmailField(max_length=255, unique=True)
     name = models.CharField(max_length=50)
-    accNo = models.CharField(max_length=15)
+    accNo = models.CharField(max_length=18)
     ifsc = models.CharField(max_length=12)
     plan = models.IntegerField()
 
