@@ -45,6 +45,9 @@ class Category(models.Model):
     name = models.CharField(max_length=255)
     website = models.ForeignKey(Website, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return self.name
+
 
 class Website(models.Model):
     title = models.CharField(max_length=100)
@@ -52,6 +55,9 @@ class Website(models.Model):
     templatetype = models.IntegerField()
     client = models.ForeignKey(ClientProfile, on_delete=models.CASCADE)
     ighandle = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.title
 
 
 class FashionProduct(models.Model):

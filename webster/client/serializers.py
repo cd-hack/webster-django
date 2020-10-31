@@ -1,6 +1,8 @@
 import re
+import requests
+import json
 from rest_framework import serializers
-from client.models import ClientProfile
+from client.models import ClientProfile,Website,Product
 
 
 class ClientSerializer(serializers.ModelSerializer):
@@ -37,3 +39,39 @@ class ClientSerializer(serializers.ModelSerializer):
             password=validated_data['password']
         )
         return client
+
+class WebsiteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Website
+        fields = ('title','about','templatettype','client','ighandle')
+        extra_kwargs = {
+            'client': {
+                'read_only': True,
+            }
+        }
+    def igexists(self,ighandle):
+        url='https://www.instagram.com/{}/?__a=1'.format(ighandle)
+        response=requests.get(url)
+        userDetails=json.loads(response.text)
+        if not userDetails.has_key('graphql'):
+            return {'status':False,'message':'The given Instagram Profile does not exist !!'}
+        else:
+            return {'status':userDetails['graphql']['user']['is_private'],'message':'The given Instagram Profile is Private !!'}
+
+    def validate(self, attrs):
+        if not 1 <= attrs['templatetype'] <= 2:
+            raise serializers.ValidationError("Invalid template type")
+        igstatus=self.igexists(attrs['ighandle'])
+        if not igstatus['status']:
+            raise serializers.ValidationError(igstatus['message'])
+        return super().validate(attrs)
+
+class ProductSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product
+        fields = ('name','price','description','website','productType',)
+        extra_kwargs = {
+            'client': {
+                'read_only': True,
+            }
+        }
