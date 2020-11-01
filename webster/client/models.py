@@ -81,9 +81,9 @@ class Product(models.Model):
         FashionProduct, on_delete=models.CASCADE, null=True)
     food = models.OneToOneField(
         FoodProduct, on_delete=models.CASCADE, null=True)
+    image=models.ImageField()
 
 
 class Image(models.Model):
     website = models.ForeignKey(Image, on_delete=models.CASCADE, null=True)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True)
     image = models.ImageField()

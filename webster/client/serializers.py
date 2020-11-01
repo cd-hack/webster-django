@@ -2,7 +2,7 @@ import re
 import requests
 import json
 from rest_framework import serializers
-from client.models import ClientProfile,Website,Product
+from client.models import ClientProfile,Website,Product,Image
 
 
 class ClientSerializer(serializers.ModelSerializer):
@@ -66,12 +66,15 @@ class WebsiteSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(igstatus['message'])
         return super().validate(attrs)
 
+
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
-        fields = ('name','price','description','website','productType',)
-        extra_kwargs = {
-            'client': {
-                'read_only': True,
-            }
-        }
+        fields = '__all__'
+    def save(self, **kwargs):
+        return super().save(**kwargs)
+
+class ImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Image
+        fields = '__all__'

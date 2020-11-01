@@ -5,27 +5,48 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework import filters
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
-from client.serializers import ClientSerializer,WebsiteSerializer,ProductSerializer
+from client.serializers import ClientSerializer,WebsiteSerializer,ProductSerializer,ImageSerializer
 from client import models
-from client.permissions import ClientPermission,WebsitePermission
+from client.permissions import ClientPermission,WebsitePermission,ImagePermission
+from client.paginations import ProductPagination
+from rest_framework.generics import ListAPIView
+import django_filters.rest_framework
 
 
 class ClientViewSet(viewsets.ModelViewSet):
-    serializer_class = ClientSerializer
     queryset = models.ClientProfile.objects.all()
+    serializer_class = ClientSerializer
     authentication_classes = (TokenAuthentication,)
     permission_classes = (ClientPermission,)
 
 class WebsiteViewSet(viewsets.ModelViewSet):
-    serializer_class=WebsiteSerializer
     queryset=models.Website.objects.all()
+    serializer_class=WebsiteSerializer
     authentication_classes=(TokenAuthentication,)
     permission_classes=(WebsitePermission,IsAuthenticated)
 
     def perform_create(self, serializer):
         serializer.save(client=self.request.user)
 
-class ProductViewSet(viewsets.ModelViewSet):
-    serializer_class=ProductSerializer
-    queryset=models.Product.objects.all()
+class ProductView(ListAPIView):
+    pagination_class=ProductPagination
+    #filter_backends = [django_filters.rest_framework.DjangoFilterBackend]
+    #filterset_fields=[]
+    
+    def get_queryset(self):
+        wwebsite=models.Website.objects.get(pk=self.request.DATA['wid'])
+        return wwebsite.product_set.all()
+
+
+class CarouselView(viewsets.ModelViewSet):
+    serializer_class=ImageSerializer
     authentication_classes=(TokenAuthentication,)
+    permission_classes=(ImagePermission,IsAuthenticated)
+
+    def get_queryset(self):
+        wwebsite=models.Website.objects.get(pk=self.request.DATA['wid'])
+        return wwebsite.image_set.all()
+    
+    def perform_create(self, serializer):
+        wwebsite=models.Website.objects.get(pk=self.request.DATA['wid'])
+        serializer.save(website=wwebsite)
