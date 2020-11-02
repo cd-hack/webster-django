@@ -55,6 +55,8 @@ class Website(models.Model):
     templatetype = models.IntegerField()
     client = models.ForeignKey(ClientProfile, on_delete=models.CASCADE)
     ighandle = models.CharField(max_length=50)
+    fburl = models.URLField()
+    lnurl = models.URLField()
 
     def __str__(self):
         return self.title
@@ -82,6 +84,7 @@ class Product(models.Model):
     food = models.OneToOneField(
         FoodProduct, on_delete=models.CASCADE, null=True)
     image=models.ImageField()
+    available=models.BooleanField()
 
 
 class Image(models.Model):

@@ -43,7 +43,7 @@ class ClientSerializer(serializers.ModelSerializer):
 class WebsiteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Website
-        fields = ('title','about','templatettype','client','ighandle')
+        fields = '__all__'
         extra_kwargs = {
             'client': {
                 'read_only': True,
