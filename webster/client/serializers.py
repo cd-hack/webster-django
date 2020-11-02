@@ -2,7 +2,7 @@ import re
 import requests
 import json
 from rest_framework import serializers
-from client.models import ClientProfile,Website,Product,Image
+from client.models import ClientProfile,Website,Product
 
 
 class ClientSerializer(serializers.ModelSerializer):
@@ -73,8 +73,3 @@ class ProductSerializer(serializers.ModelSerializer):
         fields = '__all__'
     def save(self, **kwargs):
         return super().save(**kwargs)
-
-class ImageSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Image
-        fields = '__all__'

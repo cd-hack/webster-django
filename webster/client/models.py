@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager, UserManager
-from user.models import OrderProduct
 # Create your models here.
 
 class ClientProfileManager(BaseUserManager):
@@ -41,14 +40,6 @@ class ClientProfile(AbstractBaseUser, PermissionsMixin):
         return self.email
 
 
-class Category(models.Model):
-    name = models.CharField(max_length=255)
-    website = models.ForeignKey(Website, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.name
-
-
 class Website(models.Model):
     title = models.CharField(max_length=100)
     about = models.TextField()
@@ -57,9 +48,17 @@ class Website(models.Model):
     ighandle = models.CharField(max_length=50)
     fburl = models.URLField()
     lnurl = models.URLField()
+    image=models.ImageField()
 
     def __str__(self):
         return self.title
+
+class Category(models.Model):
+    name = models.CharField(max_length=255)
+    website = models.ForeignKey(Website, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
 
 
 class FashionProduct(models.Model):
@@ -86,7 +85,5 @@ class Product(models.Model):
     image=models.ImageField()
     available=models.BooleanField()
 
-
-class Image(models.Model):
-    website = models.ForeignKey(Image, on_delete=models.CASCADE, null=True)
-    image = models.ImageField()
+    def __str__(self):
+        return self.name

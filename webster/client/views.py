@@ -5,9 +5,9 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework import filters
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
-from client.serializers import ClientSerializer,WebsiteSerializer,ProductSerializer,ImageSerializer
+from client.serializers import ClientSerializer,WebsiteSerializer,ProductSerializer
 from client import models
-from client.permissions import ClientPermission,WebsitePermission,ImagePermission
+from client.permissions import ClientPermission,WebsitePermission
 from client.paginations import ProductPagination
 from rest_framework.generics import ListAPIView
 import django_filters.rest_framework
@@ -36,17 +36,3 @@ class ProductView(ListAPIView):
     def get_queryset(self):
         wwebsite=models.Website.objects.get(pk=self.request.DATA['wid'])
         return wwebsite.product_set.all()
-
-
-class CarouselView(viewsets.ModelViewSet):
-    serializer_class=ImageSerializer
-    authentication_classes=(TokenAuthentication,)
-    permission_classes=(ImagePermission,IsAuthenticated)
-
-    def get_queryset(self):
-        wwebsite=models.Website.objects.get(pk=self.request.DATA['wid'])
-        return wwebsite.image_set.all()
-    
-    def perform_create(self, serializer):
-        wwebsite=models.Website.objects.get(pk=self.request.DATA['wid'])
-        serializer.save(website=wwebsite)
