@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager, UserManager
 # Create your models here.
 
+
 class ClientProfileManager(BaseUserManager):
     def create_user(self, email, name, phone, accNo, ifsc, plan, password=None):
         if not email:
@@ -15,8 +16,8 @@ class ClientProfileManager(BaseUserManager):
 
     def create_superuser(self, *args, **kwargs):
         print(kwargs)
-        user = self.model(email=kwargs['email'], name=kwargs['name'], phone=kwargs['phone'],
-                          accNo=kwargs['accNo'], ifsc=kwargs['ifsc'], plan=kwargs['plan'])
+        user = self.create_user(email=kwargs['email'], name=kwargs['name'], phone=kwargs['phone'],
+                                accNo=kwargs['accNo'], ifsc=kwargs['ifsc'], plan=kwargs['plan'], password=kwargs['password'])
         user.is_superuser = True
         user.is_staff = True
         user.save(using=self._db)
@@ -30,6 +31,7 @@ class ClientProfile(AbstractBaseUser, PermissionsMixin):
     accNo = models.CharField(max_length=18)
     ifsc = models.CharField(max_length=12)
     plan = models.IntegerField()
+    is_staff = models.BooleanField(default=False)
 
     objects = ClientProfileManager()
 
@@ -48,10 +50,11 @@ class Website(models.Model):
     ighandle = models.CharField(max_length=50)
     fburl = models.URLField()
     lnurl = models.URLField()
-    image=models.ImageField()
+    image = models.ImageField()
 
     def __str__(self):
         return self.title
+
 
 class Category(models.Model):
     name = models.CharField(max_length=255)
@@ -82,8 +85,8 @@ class Product(models.Model):
         FashionProduct, on_delete=models.CASCADE, null=True)
     food = models.OneToOneField(
         FoodProduct, on_delete=models.CASCADE, null=True)
-    image=models.ImageField()
-    available=models.BooleanField()
+    image = models.ImageField()
+    available = models.BooleanField()
 
     def __str__(self):
         return self.name

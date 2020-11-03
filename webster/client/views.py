@@ -29,10 +29,11 @@ class WebsiteViewSet(viewsets.ModelViewSet):
         serializer.save(client=self.request.user)
 
 class ProductView(ListAPIView):
+    serializer_class=ProductSerializer
     pagination_class=ProductPagination
     #filter_backends = [django_filters.rest_framework.DjangoFilterBackend]
     #filterset_fields=[]
     
     def get_queryset(self):
-        wwebsite=models.Website.objects.get(pk=self.request.DATA['wid'])
+        wwebsite=models.Website.objects.get(pk=self.request.data['wid'])
         return wwebsite.product_set.all()

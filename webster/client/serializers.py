@@ -2,7 +2,7 @@ import re
 import requests
 import json
 from rest_framework import serializers
-from client.models import ClientProfile,Website,Product
+from client.models import ClientProfile, Website, Product,FashionProduct,FoodProduct
 
 
 class ClientSerializer(serializers.ModelSerializer):
@@ -35,10 +35,11 @@ class ClientSerializer(serializers.ModelSerializer):
         client = ClientProfile.objects.create_user(
             email=validated_data['email'],
             name=validated_data['name'],
-            phone=validated_data['phone'], accNo=validated_data['accNo'], ifsc=validated_data['ifsc'], pan=validated_data['plan'],
+            phone=validated_data['phone'], accNo=validated_data['accNo'], ifsc=validated_data['ifsc'], plan=validated_data['plan'],
             password=validated_data['password']
         )
         return client
+
 
 class WebsiteSerializer(serializers.ModelSerializer):
     class Meta:
@@ -49,20 +50,21 @@ class WebsiteSerializer(serializers.ModelSerializer):
                 'read_only': True,
             }
         }
-    def igexists(self,ighandle):
-        url='https://www.instagram.com/{}/?__a=1'.format(ighandle)
-        response=requests.get(url)
-        userDetails=json.loads(response.text)
-        if not userDetails.has_key('graphql'):
-            return {'status':False,'message':'The given Instagram Profile does not exist !!'}
+
+    def igexists(self, ighandle):
+        url = 'https://www.instagram.com/{}/?__a=1'.format(ighandle)
+        response = requests.get(url)
+        userDetails = json.loads(response.text)
+        if 'graphql' not in userDetails:
+            return {'status': True, 'message': 'The given Instagram Profile does not exist !!'}
         else:
-            return {'status':userDetails['graphql']['user']['is_private'],'message':'The given Instagram Profile is Private !!'}
+            return {'status': userDetails['graphql']['user']['is_private'], 'message': 'The given Instagram Profile is Private !!'}
 
     def validate(self, attrs):
         if not 1 <= attrs['templatetype'] <= 2:
             raise serializers.ValidationError("Invalid template type")
-        igstatus=self.igexists(attrs['ighandle'])
-        if not igstatus['status']:
+        igstatus = self.igexists(attrs['ighandle'])
+        if igstatus['status']:
             raise serializers.ValidationError(igstatus['message'])
         return super().validate(attrs)
 
@@ -71,5 +73,18 @@ class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = '__all__'
-    def save(self, **kwargs):
-        return super().save(**kwargs)
+
+    def to_representation(self, instance):
+        ret = super(ProductSerializer, self).to_representation(instance)
+        is_list_view = isinstance(self.instance, list)
+        if is_list_view:
+            if ret['productType']==1:
+                fash=FashionProduct.objects.get(pk=ret['fashion'])
+                extra_ret = {"size":fash.size}
+            else:
+                food=FoodProduct.objects.get(pk=ret['food'])
+                extra_ret={"veg":food.veg,"foodType":food.foodType}
+            ret.pop('fashion',None)
+            ret.pop('food',None)
+            ret.update(extra_ret)
+        return ret

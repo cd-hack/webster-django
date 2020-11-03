@@ -5,4 +5,6 @@ admin.site.register(models.ClientProfile)
 admin.site.register(models.Product)
 admin.site.register(models.Website)
 admin.site.register(models.Category)
+admin.site.register(models.FashionProduct)
+admin.site.register(models.FoodProduct)
 
