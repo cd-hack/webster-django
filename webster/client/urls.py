@@ -7,7 +7,7 @@ from rest_framework.authtoken.views import obtain_auth_token
 app_name='client'
 
 router =DefaultRouter()
-router.register('user',views.ClientViewSet)
+router.register('user',views.ProfileViewSet)
 router.register('website',views.WebsiteViewSet)
 
 

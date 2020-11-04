@@ -13,8 +13,8 @@ from rest_framework.generics import ListAPIView
 import django_filters.rest_framework
 
 
-class ClientViewSet(viewsets.ModelViewSet):
-    queryset = models.ClientProfile.objects.all()
+class ProfileViewSet(viewsets.ModelViewSet):
+    queryset = models.Profile.objects.all()
     serializer_class = ClientSerializer
     authentication_classes = (TokenAuthentication,)
     permission_classes = (ClientPermission,)
@@ -26,7 +26,7 @@ class WebsiteViewSet(viewsets.ModelViewSet):
     permission_classes=(WebsitePermission,IsAuthenticated)
 
     def perform_create(self, serializer):
-        serializer.save(client=self.request.user)
+        serializer.save(client=self.request.user.client_profile)
 
 class ProductView(ListAPIView):
     serializer_class=ProductSerializer

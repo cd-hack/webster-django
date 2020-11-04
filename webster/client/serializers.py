@@ -2,44 +2,81 @@ import re
 import requests
 import json
 from rest_framework import serializers
-from client.models import ClientProfile, Website, Product,FashionProduct,FoodProduct
+from client.models import Profile, Website, Product,FashionProduct,FoodProduct
+from django.db import IntegrityError
 
 
 class ClientSerializer(serializers.ModelSerializer):
+    accNo=serializers.SerializerMethodField()
+    plan=serializers.SerializerMethodField()
+    ifsc=serializers.SerializerMethodField()
+    website=serializers.SerializerMethodField()
     class Meta:
-        model = ClientProfile
-        fields = ('id', 'phone', 'email', 'name',
-                  'accNo', 'ifsc', 'plan', 'password')
+        model = Profile
+        fields = ("id","phone","name","email","is_client","is_user","accNo","plan","ifsc","website","user_profile","client_profile")
         extra_kwargs = {
             'password': {
                 'write_only': True,
             }
         }
+    
+    def get_accNo(self,obj):
+        print(obj)
+        return obj.client_profile.accNo if obj.client_profile is not None else None
+    def get_plan(self,obj):
+        return obj.client_profile.plan if obj.client_profile is not None else None
+    def get_ifsc(self,obj):
+        return obj.client_profile.ifsc if obj.client_profile is not None else None
+    def get_website(self,obj):
+        return obj.user_profile.website if obj.user_profile is not None else None
 
-    def validate(self, attrs):
-        if not 9 <= len(attrs['accNo']) <= 18:
-            raise serializers.ValidationError(
-                "Account number should have digits between 9 and 16")
+    def to_internal_value(self, attrs):
+        for x in ["phone","name","email","is_client","is_user","password"]:
+            if x not in attrs.keys():
+                raise serializers.ValidationError({"status":"failed","message":"{} attribute not defined".format(x)})
+        if attrs['is_user']==attrs['is_client']:
+            raise serializers.ValidationError({"status":"failed","message":"Select either Client or User"})
+        if attrs['is_client']:
+            for x in ['accNo','plan','ifsc']:         
+                if x not in attrs.keys(): 
+                    raise serializers.ValidationError({"status":"failed","message":"{} attribute not received".format(x)})
+            if not 9 <= len(attrs['accNo']) <= 18:
+                raise serializers.ValidationError(
+                   {"status":"failed","message": "Account number should have digits between 9 and 16"})
+            if not 1 <= attrs['plan'] <= 2:
+                raise serializers.ValidationError({"status":"failed","message":"Invalid plan"})
+            if len(attrs['ifsc']) != 11:
+                raise serializers.ValidationError({"status":"failed","message":"IFSC Code must be 11 digits"})
         if len(attrs['phone']) != 10:
             raise serializers.ValidationError(
-                "Phone Number should be of length 10")
+                {"status":"failed","message":"Phone Number should be of length 10"})
         if re.match(r'^[a-zA-Z ]+$', attrs['name']) is None:
-            raise serializers.ValidationError("Invalid Name")
-        if not 1 <= attrs['plan'] <= 2:
-            raise serializers.ValidationError("Invalid plan")
-        if len(attrs['ifsc']) != 11:
-            raise serializers.ValidationError("IFSC Code must be 11 digits")
-        return super().validate(attrs)
+            raise serializers.ValidationError({"status":"failed","message":"Invalid Name"})
+        return attrs
+
 
     def create(self, validated_data):
-        client = ClientProfile.objects.create_user(
-            email=validated_data['email'],
-            name=validated_data['name'],
-            phone=validated_data['phone'], accNo=validated_data['accNo'], ifsc=validated_data['ifsc'], plan=validated_data['plan'],
-            password=validated_data['password']
-        )
-        return client
-
+        print('hi')
+        print(validated_data)
+        try:
+            if validated_data['is_client']:
+                client = Profile.objects.create_user(
+                    email=validated_data['email'],
+                    name=validated_data['name'],
+                    phone=validated_data['phone'], accNo=validated_data['accNo'], ifsc=validated_data['ifsc'], plan=validated_data['plan'],
+                    password=validated_data['password'],is_user=validated_data['is_user'],is_client=validated_data['is_client']
+                )
+                return client
+            elif validated_data['is_user']:
+                client = Profile.objects.create_user(
+                    email=validated_data['email'],
+                    name=validated_data['name'],
+                    phone=validated_data['phone'],
+                    password=validated_data['password'],is_user=validated_data['is_user'],is_client=validated_data['is_client'],website=validated_data.get('website',None)
+                )
+                return client
+        except IntegrityError:
+            raise serializers.ValidationError({"status":"failed","message":"Account with same email or phone number exists"})
 
 class WebsiteSerializer(serializers.ModelSerializer):
     class Meta:

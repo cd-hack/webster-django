@@ -1,42 +1,73 @@
 from django.db import models
+from django.apps import apps
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager, UserManager
 # Create your models here.
 
 
-class ClientProfileManager(BaseUserManager):
-    def create_user(self, email, name, phone, accNo, ifsc, plan, password=None):
+class ClientProfile(models.Model):
+    accNo = models.CharField(max_length=18)
+    ifsc = models.CharField(max_length=12)
+    plan = models.IntegerField()
+
+
+class UserProfile(models.Model):
+    website = models.ForeignKey(
+        'client.Website', on_delete=models.CASCADE, null=True)
+
+
+class ProfileManager(BaseUserManager):
+    def create_user(self, email, name, phone, is_user, is_client, accNo=None, ifsc=None, plan=None, website=None, password=None):
         if not email:
             raise ValueError('email must have a value')
+        if is_client == is_user:
+            raise ValueError('You can either be a client or user')
         email = self.normalize_email(email)
-        user = self.model(email=email, name=name, phone=phone,
-                          accNo=accNo, ifsc=ifsc, plan=plan)
+        user = self.model()
+        if is_user:
+            wsite = None
+            if website:
+                Web = apps.get_model(app_label='client', model_name='Website')
+                wsite = Web.objects.get(pk=website)
+            up = UserProfile(website=wsite)
+            up.save(using=self._db)
+            user = self.model(email=email, name=name,
+                              phone=phone, user_profile=up,is_user=is_user,is_client=is_client)
+        if is_client:
+            user = self.model(email=email, name=name, phone=phone)
+            cp=ClientProfile(accNo=accNo, ifsc=ifsc, plan=plan)
+            cp.save(using=self._db)
+            user = self.model(email=email, name=name,
+                              phone=phone, client_profile=cp,is_user=is_user,is_client=is_client)
         user.set_password(password)
         user.save(using=self._db)
         return user
 
     def create_superuser(self, *args, **kwargs):
         print(kwargs)
-        user = self.create_user(email=kwargs['email'], name=kwargs['name'], phone=kwargs['phone'],
-                                accNo=kwargs['accNo'], ifsc=kwargs['ifsc'], plan=kwargs['plan'], password=kwargs['password'])
+        user = self.create_user(email=kwargs['email'], name=kwargs['name'], phone=kwargs['phone'],is_user=kwargs['is_user'],is_client=kwargs['is_client'],
+                                accNo=kwargs.get('accNo',12), ifsc=kwargs.get('ifsc',23), plan=kwargs.get('plan',1), password=kwargs['password'],website=kwargs.get('website',None))
         user.is_superuser = True
         user.is_staff = True
         user.save(using=self._db)
         return user
 
 
-class ClientProfile(AbstractBaseUser, PermissionsMixin):
+class Profile(AbstractBaseUser, PermissionsMixin):
     phone = models.CharField(max_length=10, unique=True)
     email = models.EmailField(max_length=255, unique=True)
     name = models.CharField(max_length=50)
-    accNo = models.CharField(max_length=18)
-    ifsc = models.CharField(max_length=12)
-    plan = models.IntegerField()
+    is_client = models.BooleanField()
+    is_user = models.BooleanField()
     is_staff = models.BooleanField(default=False)
+    client_profile = models.OneToOneField(
+        ClientProfile, on_delete=models.CASCADE, null=True)
+    user_profile = models.OneToOneField(
+        UserProfile, on_delete=models.CASCADE, null=True)
 
-    objects = ClientProfileManager()
+    objects = ProfileManager()
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['phone', 'name', 'ifsc', 'accNo', 'plan']
+    REQUIRED_FIELDS = ['phone', 'name', 'is_client', 'is_user']
 
     def __str__(self):
         return self.email
