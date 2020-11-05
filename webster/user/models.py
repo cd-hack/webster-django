@@ -2,7 +2,7 @@ from django.db import models
 # from client.models import Website, Product
 
 class Order(models.Model):
-    orderDate = models.DateTimeField(auto_now=True)
+    orderDate = models.DateField(auto_now=True)
     user = models.ForeignKey('client.Profile', on_delete=models.CASCADE)
     website = models.ForeignKey('client.Website', on_delete=models.CASCADE)
 

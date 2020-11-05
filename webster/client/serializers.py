@@ -102,7 +102,9 @@ class WebsiteSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Invalid template type")
         igstatus = self.igexists(attrs['ighandle'])
         if igstatus['status']:
-            raise serializers.ValidationError(igstatus['message'])
+            raise serializers.ValidationError({"status":"failed","message":igstatus['message']})
+        # if attrs['client'] is None:
+        #     raise serializers.ValidationError({"status":"failed","message":"clients are only permitted to create website"})
         return super().validate(attrs)
 
 

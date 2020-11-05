@@ -14,4 +14,4 @@ class WebsitePermission(permissions.BasePermission):
         if request.method in permissions.SAFE_METHODS:
             return True
         else:
-            return request.user.id==obj.client.id
+            return request.user.id==obj.client.profile_set.id

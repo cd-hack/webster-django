@@ -97,13 +97,11 @@ class Category(models.Model):
 
 class FashionProduct(models.Model):
     size = models.IntegerField()
-    category = models.ManyToManyField(Category)
 
 
 class FoodProduct(models.Model):
     veg = models.BooleanField()
     foodType = models.IntegerField()
-    category = models.ManyToManyField(Category)
 
 
 class Product(models.Model):
@@ -116,8 +114,11 @@ class Product(models.Model):
         FashionProduct, on_delete=models.CASCADE, null=True)
     food = models.OneToOneField(
         FoodProduct, on_delete=models.CASCADE, null=True)
-    image = models.ImageField()
+    image = models.URLField()
     available = models.BooleanField()
+    instagramid=models.CharField(max_length=20,unique=True)
+    date=models.DateTimeField()
+    category=models.ForeignKey(Category,on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
