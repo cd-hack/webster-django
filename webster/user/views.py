@@ -4,6 +4,7 @@ from django.shortcuts import render
 
 
 def home(request, storename):
+    
     return render(request, 'user/index.html')
 
 

@@ -64,7 +64,7 @@ def fetchProducts(request,pk=None):
     categories = website.category_set
     if website is None:
         return Response({"status": "failed", "message": "Invalid website ID"}, status=status.HTTP_404_NOT_FOUND)
-    elif request.user != website.client.profile_set:
+    elif request.user != website.client.profile:
         return Response({"status": "failed", "message": "Not allowed"}, status=status.HTTP_403_FORBIDDEN)
     else:
         products = []
@@ -132,7 +132,7 @@ def dashBoard(request,pk=None):
         return Response({"status":"failed","message":"website id argument was not passed"})
     websiteId = pk
     website = models.Website.objects.get(pk=websiteId)
-    if request.user != website.client.profile_set:
+    if request.user != website.client.profile:
         return Response({"status": "failed", "message": "Not allowed"}, status=status.HTTP_403_FORBIDDEN)
     dash= dict()
     dash['ordergraph']=list(website.order_set.filter(date__gt=datetime.date.today-7).annotate(date=TruncDay('date')).values("date").annotate(created_count=Count('id')).order_by("-date"))
