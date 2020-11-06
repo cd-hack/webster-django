@@ -17,7 +17,6 @@ import user.models
 from client.permissions import ClientPermission, WebsitePermission
 from client.paginations import ProductPagination
 from rest_framework.generics import ListAPIView
-import django_filters.rest_framework
 from rest_framework import serializers
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 
