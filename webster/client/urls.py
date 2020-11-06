@@ -14,5 +14,8 @@ router.register('website',views.WebsiteViewSet)
 urlpatterns = [
     path('',include(router.urls)),
     path('login/',obtain_auth_token),
-    path('products/',views.ProductView.as_view())
+    path('products/',views.ProductView.as_view()),
+    path('fetchproducts/<int:pk>/', views.fetchProducts, name='fetchproducts'),
+    path('dashboard/<int:pk>/', views.dashBoard, name='dashboard')
+
 ]

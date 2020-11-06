@@ -57,14 +57,16 @@ class ProductView(ListAPIView):
 @api_view(['POST'])
 @authentication_classes([TokenAuthentication, ])
 @permission_classes([IsAuthenticated, ])
-def fetchProducts(request):
-    websiteId = request.data['wid']
+def fetchProducts(request,pk=none):
+    if not pk:
+        return Response({"status":"failed","message":"website id argument was not passed"})
+    websiteId = pk
     website = models.Website.objects.get(pk=websiteId)
     categories = website.category_set
     if website is None:
         return Response({"status": "failed", "message": "Invalid website ID"}, status=status.HTTP_404_NOT_FOUND)
     elif request.user != website.client.profile_set:
-        return Response({"status": "failed", "message": "Invalid website ID"}, status=status.HTTP_403_FORBIDDEN)
+        return Response({"status": "failed", "message": "Not allowed"}, status=status.HTTP_403_FORBIDDEN)
     else:
         products = []
         url = 'https://www.instagram.com/{}/?__a=1'.format(website.ighandle)
@@ -126,11 +128,13 @@ def fetchProducts(request):
 @api_view(['POST'])
 @authentication_classes([TokenAuthentication, ])
 @permission_classes([IsAuthenticated, ])
-def dashBoard(request):
-    if 'wid' not in request.data:
+def dashBoard(request,pk=None):
+    if not pk:
         return Response({"status":"failed","message":"website id argument was not passed"})
-    websiteId = request.data['wid']
+    websiteId = pk
     website = models.Website.objects.get(pk=websiteId)
+    if request.user != website.client.profile_set:
+        return Response({"status": "failed", "message": "Not allowed"}, status=status.HTTP_403_FORBIDDEN)
     dash= dict()
     dash['ordergraph']=list(website.order_set.filter(date__gt=datetime.date.today-7).annotate(date=TruncDay('date')).values("date").annotate(created_count=Count('id')).order_by("-date"))
     orders=website.order_set.all()
