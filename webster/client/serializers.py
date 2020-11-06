@@ -2,7 +2,8 @@ import re
 import requests
 import json
 from rest_framework import serializers
-from client.models import Profile, Website, Product,FashionProduct,FoodProduct
+from client.models import Profile, Website, Product,FashionProduct,FoodProduct,Category
+# from user.models import Wishlist,OrderProduct,Rating
 from django.db import IntegrityError
 
 
@@ -115,15 +116,39 @@ class ProductSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         ret = super(ProductSerializer, self).to_representation(instance)
+        #print(ret)
         is_list_view = isinstance(self.instance, list)
+        is_object_view=isinstance(self.instance,object)
         if is_list_view:
+            cat=Category.objects.get(pk=ret['category'])
+            extra_ret={'category':cat.name}
+            ret.pop('description',None)
+            ret.pop('website',None)
+            ret.pop('instagramid',None)
+            ret.pop('fashion',None)
+            ret.pop('food',None)
+            ret.update(extra_ret)
+        elif is_object_view:
+            product=Product.objects.get(pk=ret['id'])
+            extra_ret=dict()
             if ret['productType']==1:
                 fash=FashionProduct.objects.get(pk=ret['fashion'])
                 extra_ret = {"size":fash.size}
             else:
                 food=FoodProduct.objects.get(pk=ret['food'])
                 extra_ret={"veg":food.veg,"foodType":food.foodType}
+            cat=Category.objects.get(pk=ret['category'])
+            extra_ret['categoryname']=cat.name
+            extra_ret['wishlistno']=product.wishlist_set.all().count()
+            extra_ret['reviews']=[]
+            for i in product.rating_set.all():
+                a=dict()
+                a['rating']=i.rating
+                a['review']=i.review
+                extra_ret['review'].append(a)
+            extra_ret['orderno']=product.orderproduct_set.all().count()
             ret.pop('fashion',None)
             ret.pop('food',None)
+            ret.pop('category',None)
             ret.update(extra_ret)
         return ret

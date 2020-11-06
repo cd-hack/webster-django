@@ -8,6 +8,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.authentication import TokenAuthentication
 from rest_framework import filters
+from django.http import Http404
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from client.serializers import ClientSerializer, WebsiteSerializer, ProductSerializer
@@ -54,18 +55,56 @@ class ProductView(ListAPIView):
         return wwebsite.product_set.all()
 
 
+class ProductDetail(APIView):
+    def get_object(self, pk):
+        try:
+            return models.Product.objects.get(pk=pk)
+        except models.Product.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, format=None):
+        prod = self.get_object(pk)
+        serializer = ProductSerializer(prod)
+        return Response(serializer.data)
+
+
+
+@api_view(['GET','POST'])
+@authentication_classes([TokenAuthentication, ])
+@permission_classes([IsAuthenticated, ])
+def categoryview(request,pk=None):
+    if not pk:
+        return Response({"status":"failed","message":"website id argument was not passed"},status=status.HTTP_400_BAD_REQUEST)
+    websiteId = pk
+    website = models.Website.objects.get(pk=websiteId)
+    if website is None:
+        return Response({"status": "failed", "message": "Invalid website ID"}, status=status.HTTP_404_NOT_FOUND)
+    elif request.user != website.client.profile:
+        return Response({"status": "failed", "message": "Not allowed"}, status=status.HTTP_403_FORBIDDEN)
+    else:
+        if request.method=='POST':
+            catlist=request.data['category']
+            for i in catlist:
+                newc=models.Category.objects.create(name=i,website=website)
+            return Response({"status":"success","message":"Categories successfully added"},status=status.HTTP_200_OK)
+        elif request.method=='GET':
+            data=dict()
+            data['data']=list(website.category_set.all())
+            data['status']='success'
+            return Response(data=data,status=status.HTTP_200_OK)
+
 @api_view(['POST'])
 @authentication_classes([TokenAuthentication, ])
 @permission_classes([IsAuthenticated, ])
-def fetchProducts(request,pk=none):
+def fetchProducts(request,pk=None):
     if not pk:
-        return Response({"status":"failed","message":"website id argument was not passed"})
+        return Response({"status":"failed","message":"website id argument was not passed"},status=status.HTTP_400_BAD_REQUEST)
     websiteId = pk
     website = models.Website.objects.get(pk=websiteId)
     categories = website.category_set
     if website is None:
         return Response({"status": "failed", "message": "Invalid website ID"}, status=status.HTTP_404_NOT_FOUND)
-    elif request.user != website.client.profile_set:
+    elif request.user != website.client.profile:
         return Response({"status": "failed", "message": "Not allowed"}, status=status.HTTP_403_FORBIDDEN)
     else:
         products = []
@@ -100,6 +139,7 @@ def fetchProducts(request,pk=none):
                 end_cursor = '&after='+ec
         for i in products:
             try:
+                print(i['description'])
                 fp=None
                 fd=None
                 prodDetails = json.loads(i['description'])
@@ -121,6 +161,7 @@ def fetchProducts(request,pk=none):
                  'description': prodDetails['description'], 'productType': int(prodDetails['productType']),
                  'image': i['url'], 'available': prodDetails['available'], 'category': category,'fashion':fp,'food':fd})
             except:
+                print('hello')
                 continue
         return Response({'status': 'success', 'message': 'Products successfully fetched'}, status=status.HTTP_201_CREATED)
 
@@ -133,7 +174,7 @@ def dashBoard(request,pk=None):
         return Response({"status":"failed","message":"website id argument was not passed"})
     websiteId = pk
     website = models.Website.objects.get(pk=websiteId)
-    if request.user != website.client.profile_set:
+    if request.user != website.client.profile:
         return Response({"status": "failed", "message": "Not allowed"}, status=status.HTTP_403_FORBIDDEN)
     dash= dict()
     dash['ordergraph']=list(website.order_set.filter(date__gt=datetime.date.today-7).annotate(date=TruncDay('date')).values("date").annotate(created_count=Count('id')).order_by("-date"))
