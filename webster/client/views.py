@@ -177,13 +177,14 @@ def dashBoard(request,pk=None):
     if request.user != website.client.profile:
         return Response({"status": "failed", "message": "Not allowed"}, status=status.HTTP_403_FORBIDDEN)
     dash= dict()
-    dash['ordergraph']=list(website.order_set.filter(date__gt=datetime.date.today-7).annotate(date=TruncDay('date')).values("date").annotate(created_count=Count('id')).order_by("-date"))
+    week_ago=datetime.date.today()-datetime.timedelta(days=7)
+    dash['ordergraph']=list(website.order_set.filter(orderDate__gt=week_ago.strftime("%Y-%m-%d")).values("orderDate").annotate(created_count=Count('id')).order_by("-orderDate"))
     orders=website.order_set.all()
     dash['order_total']=0
     for i in orders:
         for j in i.orderproduct_set.all():
             dash['order_total']+=j.total
-    dash['ordertoday']=website.order_set.filter(date=datetime.date.today).count
-    dash['totalorders']=website.order_set.all().count
+    dash['ordertoday']=website.order_set.filter(orderDate=datetime.date.today().strftime("%Y-%m-%d")).count()
+    dash['totalorders']=website.order_set.all().count()
     dash['status']='success'
     return Response(data=dash,status=status.HTTP_200_OK)

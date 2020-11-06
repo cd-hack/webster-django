@@ -19,5 +19,4 @@ urlpatterns = [
     path('fetchproducts/<int:pk>/', views.fetchProducts, name='fetchproducts'),
     path('dashboard/<int:pk>/', views.dashBoard, name='dashboard'),
     path('productdetail/<int:pk>',views.ProductDetail.as_view())
-
 ]
