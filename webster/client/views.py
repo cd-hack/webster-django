@@ -16,7 +16,6 @@ import user.models
 from client.permissions import ClientPermission, WebsitePermission
 from client.paginations import ProductPagination
 from rest_framework.generics import ListAPIView
-import django_filters.rest_framework
 from rest_framework import serializers
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 
@@ -57,7 +56,7 @@ class ProductView(ListAPIView):
 @api_view(['POST'])
 @authentication_classes([TokenAuthentication, ])
 @permission_classes([IsAuthenticated, ])
-def fetchProducts(request,pk=none):
+def fetchProducts(request,pk=None):
     if not pk:
         return Response({"status":"failed","message":"website id argument was not passed"})
     websiteId = pk
