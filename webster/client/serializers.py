@@ -55,6 +55,18 @@ class ClientSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError({"status":"failed","message":"Invalid Name"})
         return attrs
 
+    def to_representation(self, instance):
+        print('hello')
+        ret = super(ClientSerializer, self).to_representation(instance)
+        isview = isinstance(self.instance, object)
+        if isview:
+            print('hi')
+            w=Profile.objects.get(pk=ret['id']).client_profile.website_set.all()
+            extra_ret={'websites_owned':[i.id for i in w]}
+            ret.update(extra_ret)
+        print(isview)
+        return ret
+
 
     def create(self, validated_data):
         print('hi')

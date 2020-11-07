@@ -18,6 +18,7 @@ from client.permissions import ClientPermission, WebsitePermission
 from client.paginations import ProductPagination
 from rest_framework.generics import ListAPIView
 from rest_framework import serializers
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 
 
@@ -26,6 +27,8 @@ class ProfileViewSet(viewsets.ModelViewSet):
     serializer_class = ClientSerializer
     authentication_classes = (TokenAuthentication,)
     permission_classes = (ClientPermission,)
+    filter_backends=[DjangoFilterBackend,]
+    filterset_fields=['email','phone',]
 
 
 class WebsiteViewSet(viewsets.ModelViewSet):
