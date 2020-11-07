@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect, HttpResponse
 from client.models import Website, Product
+from django.urls import reverse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 
@@ -15,7 +16,7 @@ def userLogin(request, storename):
         if user is not None:
             login(request, user)
             print(user)
-            return redirect('home')
+            return redirect(reverse(home,args=['mycakestore']))
         else:
             messages.info(request, 'Username or Password is Wrong')
 
