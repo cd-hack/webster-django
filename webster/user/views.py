@@ -16,7 +16,7 @@ def userLogin(request, storename):
         if user is not None:
             login(request, user)
             print(user)
-            return redirect(reverse(home,args=['mycakestore']))
+            return redirect(reverse('user:home',args=['mycakestore']))
         else:
             messages.info(request, 'Username or Password is Wrong')
 
