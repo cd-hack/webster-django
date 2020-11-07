@@ -1,12 +1,30 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect, HttpResponse
 from client.models import Website, Product
+from django.contrib.auth import authenticate, login, logout
+from django.contrib import messages
+
 
 # Create your views here.
 
 
+def userLogin(request, storename):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            print(user)
+            return redirect('home')
+        else:
+            messages.info(request, 'Username or Password is Wrong')
+
+    context = {}
+    return render(request, 'user/login.html')
 
 
-
+def userRegister(request):
+    pass
 
 
 def home(request, storename):
@@ -42,8 +60,8 @@ def contact(request, storename):
 
 
 def product_details(request, storename, id):
-    product= Product.objects.get(id=id)
-    context = {'storename': storename,'product':product}
+    product = Product.objects.get(id=id)
+    context = {'storename': storename, 'product': product}
     return render(request, 'user/product-details.html', context)
 
 
