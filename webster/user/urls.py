@@ -13,8 +13,17 @@ urlpatterns = [
     path('<storename>/shop/<int:id>/',
          views.product_details, name='product-details'),
     path('<storename>/wishlist/', views.wishlist, name='wishlist'),
-    path('<storename>/cart/', views.wishlist, name='cart'),
+    path('<storename>/cart/', views.cart, name='cart'),
     path('<storename>/checkout/', views.checkout, name='checkout'),
+    path('<storename>/shop/<int:id>/add-to-wishlist/',
+         views.add_to_wishlist, name='add-to-wishlist'),
+    path('<storename>/shop/<int:id>/add-to-cart/',
+         views.add_to_cart, name='add-to-cart'),
+    path('<storename>/wishlist/<int:id>/remove-from-cart/',
+         views.remove_from_cart, name='remove-from-cart'),
+     path('<storename>/wishlist/<int:id>/remove-from-wishlist/',
+         views.remove_from_wishlist, name='remove-from-wishlist'),
+
 
 
 ]

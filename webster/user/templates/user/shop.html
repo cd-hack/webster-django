@@ -72,7 +72,7 @@
                         <h6><a href="#">{{product.name}}</a></h6>
                         <div class="product__item__price">₹ {{product.price}}</div>
                         <div class="cart_add">
-                            <a href="#">Add to cart</a>
+                            <a href="{% url 'user:add-to-cart' storename product.id %}">Add to cart</a>
                         </div>
                     </div>
                 </div>

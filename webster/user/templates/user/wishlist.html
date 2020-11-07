@@ -40,62 +40,25 @@
                             </tr>
                         </thead>
                         <tbody>
+
+                            {% for item in wishlists %}
                             <tr>
                                 <td class="product__cart__item">
                                     <div class="product__cart__item__pic">
-                                        <img src="img/shop/cart/cart-1.jpg" alt="">
+                                        <img src="" alt="">
                                     </div>
                                     <div class="product__cart__item__text">
-                                        <h6>Vanilla Salted Caramel</h6>
+                                        <h6>{{item.product.name}}</h6>
                                     </div>
                                 </td>
-                                <td class="cart__price">$ 15.00</td>
+                                <td class="cart__price">$ {{item.product.price}}</td>
                                 <td class="cart__stock">In stock</td>
                                 <td class="cart__btn"><a href="#" class="primary-btn">Add to cart</a></td>
-                                <td class="cart__close"><span class="icon_close"></span></td>
+                                <td class="cart__close"><a
+                                        href="{% url 'user:remove-from-wishlist' storename item.id %}"><span
+                                            class="icon_close"></a></span></td>
                             </tr>
-                            <tr>
-                                <td class="product__cart__item">
-                                    <div class="product__cart__item__pic">
-                                        <img src="img/shop/cart/cart-2.jpg" alt="">
-                                    </div>
-                                    <div class="product__cart__item__text">
-                                        <h6>German Chocolate</h6>
-                                    </div>
-                                </td>
-                                <td class="cart__price">$ 32.50</td>
-                                <td class="cart__stock">In stock</td>
-                                <td class="cart__btn"><a href="#" class="primary-btn">Add to cart</a></td>
-                                <td class="cart__close"><span class="icon_close"></span></td>
-                            </tr>
-                            <tr>
-                                <td class="product__cart__item">
-                                    <div class="product__cart__item__pic">
-                                        <img src="img/shop/cart/cart-3.jpg" alt="">
-                                    </div>
-                                    <div class="product__cart__item__text">
-                                        <h6>SWEET AUTUMN LEAVES</h6>
-                                    </div>
-                                </td>
-                                <td class="cart__price">$ 23.50</td>
-                                <td class="cart__stock">In stock</td>
-                                <td class="cart__btn"><a href="#" class="primary-btn">Add to cart</a></td>
-                                <td class="cart__close"><span class="icon_close"></span></td>
-                            </tr>
-                            <tr>
-                                <td class="product__cart__item">
-                                    <div class="product__cart__item__pic">
-                                        <img src="img/shop/cart/cart-4.jpg" alt="">
-                                    </div>
-                                    <div class="product__cart__item__text">
-                                        <h6>Gluten Free Mini Dozen</h6>
-                                    </div>
-                                </td>
-                                <td class="cart__price">$ 32.50</td>
-                                <td class="cart__stock">In stock</td>
-                                <td class="cart__btn"><a href="#" class="primary-btn">Add to cart</a></td>
-                                <td class="cart__close"><span class="icon_close"></span></td>
-                            </tr>
+                            {% endfor %}
                         </tbody>
                     </table>
                 </div>
