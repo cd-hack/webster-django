@@ -69,6 +69,17 @@ class ProductDetail(APIView):
         serializer = ProductSerializer(prod)
         return Response(serializer.data)
 
+class WebsiteList(ListAPIView):
+    serializer_class=WebsiteSerializer
+    authentication_classes=(TokenAuthentication,)
+    permission_classes=(IsAuthenticated,)
+
+    def get_queryset(self):
+        user=self.request.user
+        if user.client_profile is not None:
+            return user.client_profile.website_set.all()
+        else :
+            return models.Website.none()
 
 
 @api_view(['GET','POST'])
