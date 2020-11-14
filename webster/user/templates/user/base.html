@@ -85,7 +85,7 @@
                                 {{website.title}} | {{website.websiteid}}
                             </div>
                             <div class="header__logo">
-                                
+
                             </div>
                             <div class="header__top__right">
                                 <div class="header__top__right__links">
@@ -105,8 +105,8 @@
                                                 href="{% url 'user:logout' storename %}"> Logout</a> </span></div>
                                     {% else %}
 
-                                    <div class="cart__price site-btn"><span> <a
-                                                href="{% url 'user:login' storename %}"> Login</a> </span></div>
+                                    <div class="cart__price site-btn"><span> <a href="{% url 'user:login' storename %}">
+                                                Login</a> </span></div>
 
                                     {% endif %}
 
@@ -147,12 +147,14 @@
         </div>
     </header>
     <!-- Header Section End -->
-
-    <div>
-        {% for message in messages %}
-        {{message}}
-        {% endfor %}
+    <div class="row">
+        <div class="col-12 justify-content-center">
+            {% for message in messages %}
+            {{message}}
+            {% endfor %}
+        </div>
     </div>
+
 
 
 
