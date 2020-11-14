@@ -14,23 +14,23 @@ class CartProduct(models.Model):
     quantity = models.IntegerField()
     product = models.ForeignKey(
         'client.Product', null=True, on_delete=models.CASCADE)
-    total = models.DecimalField(decimal_places=2, max_digits=8)
-    # @property
-    # def total(self):
-    #    _total = self.quantity*self.product.price
-    #    return total
+    #total = models.DecimalField(decimal_places=2, max_digits=8)
+    @property
+    def total(self):
+       _total = self.quantity*self.product.price
+       return total
 
 
 class OrderProduct(models.Model):
     quantity = models.IntegerField()
     product = models.ForeignKey(
         'client.Product', null=True, on_delete=models.CASCADE)
-    total = models.DecimalField(decimal_places=2, max_digits=8)
+    #total = models.DecimalField(decimal_places=2, max_digits=8)
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
-    # @property
-    # def total(self):
-    #    _total = self.quantity*self.product.price
-    #    return total
+    @property
+    def total(self):
+       _total = self.quantity*self.product.price
+       return total
 
 
 class Rating(models.Model):
