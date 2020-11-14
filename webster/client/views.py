@@ -1,6 +1,7 @@
 import requests
 import json
 import datetime
+import re
 from django.db.models.functions import TruncDay
 from django.db.models import Count 
 from rest_framework import status
@@ -20,6 +21,7 @@ from rest_framework.generics import ListAPIView
 from rest_framework import serializers
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from .models import Profile
 
 
 class ProfileViewSet(viewsets.ModelViewSet):
@@ -32,17 +34,40 @@ class ProfileViewSet(viewsets.ModelViewSet):
 
     def partial_update(self, request, pk=None):
         if not (request.user.is_authenticated and request.user.id!=pk):
-            return Response(data={"status": "failed", "message": "Unknown credentials"})
+            return Response(data={"status": "failed", "message": "Unknown credentials"},status=status.HTTP_403_FORBIDDEN)
         password=request.data.get('password',None)
         if password is None:
-            return Response(data={"status": "failed", "message": "Enter password"})
+            return Response(data={"status": "failed", "message": "Enter password"},status=status.HTTP_406_NOT_ACCEPTABLE)
         print(request.user)
         if not request.user.check_password(password):
-            return Response(data={"status": "failed", "message": "Password entered is incorrect"})
-        serialized = ClientSerializer(request.user, data=request.data, partial=True)
-        serialized.is_valid()
-        return Response(data=serialized.data,status=status.HTTP_202_ACCEPTED)
-
+            return Response(data={"status": "failed", "message": "Password entered is incorrect"},status=status.HTTP_400_BAD_REQUEST)
+        email=request.data.get('email',None)
+        phone=request.data.get('phone',None)
+        ifsc=request.data.get('ifsc',None)
+        accNo=request.data.get('accNo',None)
+        if email is not None:
+            regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
+            if not re.search(regex,email):
+                Response(data={"status":"failed","message":"Invalid Email"},status=status.HTTP_400_BAD_REQUEST)
+            if Profile.objects.filter(email=email).count()==0:
+                request.user.email=email
+                request.user.save()
+                return Response(data={"status":"success","message":"Email changed successfully"},status=status.HTTP_200_OK)
+            else:   return Response(data={"status":"failed","message":"Account with this Email address already exists"},status=status.HTTP_400_BAD_REQUEST)
+        if phone is not None:
+            if len(phone)!=10:  return Response(data={"status":"failed","message":"Invalid Phone Number"},status=status.HTTP_400_BAD_REQUEST)
+            if Profile.objects.filter(phone=phone).count()==0:
+                request.user.phone=phone
+                request.user.save()
+                return Response(data={"status":"success","message":"Phone number changed successfully"},status=status.HTTP_200_OK)
+            else:   return Response(data={"status":"failed","message":"Account with this Phone number already exists"},status=status.HTTP_400_BAD_REQUEST)
+        if ifsc is not None and accNo is not None:
+            request.user.client_profile.ifsc=ifsc
+            request.user.client_profile.accNo=accNo
+            request.user.client_profile.save()
+            request.user.save()
+            return Response(data={"status":"success","message":"Account details changed successfully"},status=status.HTTP_200_OK)
+        return Response(data={"status":"failed","message":"Parameters not found"},status=status.HTTP_400_BAD_REQUEST)
 
 class WebsiteViewSet(viewsets.ModelViewSet):
     queryset = models.Website.objects.all()
