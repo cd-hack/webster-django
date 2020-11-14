@@ -21,8 +21,13 @@ urlpatterns = [
          views.add_to_cart, name='add-to-cart'),
     path('<storename>/wishlist/<int:id>/remove-from-cart/',
          views.remove_from_cart, name='remove-from-cart'),
-     path('<storename>/wishlist/<int:id>/remove-from-wishlist/',
+    path('<storename>/wishlist/<int:id>/remove-from-wishlist/',
          views.remove_from_wishlist, name='remove-from-wishlist'),
+    path('<storename>/logout/',
+         views.userLogout, name='logout'),
+    path('<storename>/write-review/<int:id>/',
+         views.write_review, name='write-review'),
+
 
 
 

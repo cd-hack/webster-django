@@ -65,7 +65,7 @@
                     {% csrf_token %}
 
                     <span class="login100-form-title p-b-43">
-                        Login to continue
+                        LOGIN WITH WEBSTER ACCOUNT
                     </span>
                     {% for message in messages %}
                     {{message}}
@@ -102,8 +102,8 @@
 
 
                     <div class="container-login100-form-btn">
-                        <input class="login100-form-btn" type="submit">
-                        Login
+                        <input class="login100-form-btn" type="submit" value="Login">
+                        
                     </div>
 
                     <div class="text-center p-t-46 p-b-20">
@@ -123,7 +123,7 @@
                     </div>
                 </form>
 
-                <div class="login100-more" style="background-image: url({% static 'user/img/bg-01.jpg' %}); ">
+                <div class="login100-more" style="background-image: url({% static 'user/img/logo-webster.jpg' %}); ">
                 </div>
             </div>
         </div>

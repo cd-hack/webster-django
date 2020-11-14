@@ -41,7 +41,8 @@
         <div class="offcanvas__cart">
             <div class="offcanvas__cart__links">
                 <a href="#" class="search-switch"><img src="{% static 'user/img/icon/search.png' %}" alt=""></a>
-                <a href="{% url 'user:wishlist' storename %}"><img src="{% static 'user/img/icon/heart.png' %}" alt=""></a>
+                <a href="{% url 'user:wishlist' storename %}"><img src="{% static 'user/img/icon/heart.png' %}"
+                        alt=""></a>
             </div>
             <div class="offcanvas__cart__item">
                 <a href="{% url 'user:cart' storename%}"><img src="{% static 'user/img/icon/cart.png' %}" alt="">
@@ -104,13 +105,26 @@
                                 <div class="header__top__right__links">
                                     <a href="#" class="search-switch"><img src="{% static 'user/img/icon/search.png' %}"
                                             alt=""></a>
-                                    <a href="{% url 'user:wishlist' storename %}"><img src="{% static 'user/img/icon/heart.png' %}" alt=""></a>
+                                    <a href="{% url 'user:wishlist' storename %}"><img
+                                            src="{% static 'user/img/icon/heart.png' %}" alt=""></a>
                                 </div>
                                 <div class="header__top__right__cart">
                                     <a href="{% url 'user:cart' storename%}"><img
                                             src="{% static 'user/img/icon/cart.png' %}" alt="">
                                         <span>0</span></a>
-                                    <div class="cart__price">Cart: <span>$0.00</span></div>
+
+                                    {% if user.is_authenticated %}
+                                    <div class="cart__price"><span> {{user.email}} </span></div>
+                                    <div class="cart__price site-btn"><span> <a
+                                                href="{% url 'user:logout' storename %}"> Logout</a> </span></div>
+                                    {% else %}
+
+                                    <div class="cart__price site-btn"><span> <a
+                                                href="{% url 'user:login' storename %}"> Login</a> </span></div>
+
+                                    {% endif %}
+
+
                                 </div>
                             </div>
                         </div>

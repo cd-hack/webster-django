@@ -62,20 +62,22 @@
             {% for product in products %}
 
             <div class="col-lg-3 col-md-6 col-sm-6">
-                <div class="product__item">
-                    <div class="product__item__pic set-bg" data-setbg="{{product.image}}">
-                        <div class="product__label">
-                            <span></span>
+                <a href="{% url 'user:product-details' storename product.id %}">
+                    <div class="product__item">
+                        <div class="product__item__pic set-bg" data-setbg="{{product.image}}">
+                            <div class="product__label">
+                                <span>{{product.category}}</span>
+                            </div>
+                        </div>
+                        <div class="product__item__text">
+                            <h6><a href="#">{{product.name}}</a></h6>
+                            <div class="product__item__price">₹ {{product.price}}</div>
+                            <div class="cart_add">
+                                <a href="{% url 'user:add-to-cart' storename product.id %}">Add to cart</a>
+                            </div>
                         </div>
                     </div>
-                    <div class="product__item__text">
-                        <h6><a href="#">{{product.name}}</a></h6>
-                        <div class="product__item__price">₹ {{product.price}}</div>
-                        <div class="cart_add">
-                            <a href="{% url 'user:add-to-cart' storename product.id %}">Add to cart</a>
-                        </div>
-                    </div>
-                </div>
+                </a>
             </div>
 
             {% endfor %}

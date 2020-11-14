@@ -33,8 +33,9 @@
                         <span>About {{storename}}</span>
                         <h2>{{website.about}}</h2>
                     </div>
-                    <p>The "Cake Shop" is a Jordanian Brand that started as a small family business. The owners are
-                        Dr. Iyad Sultan and Dr. Sereen Sharabati, supported by a staff of 80 employees.</p>
+                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat rerum nesciunt doloremque ipsa
+                        expedita veniam aliquam. At illum veniam perferendis dolore voluptatum neque ut? Sit numquam
+                        optio mollitia odio nisi!</p>
                 </div>
             </div>
             <div class="col-lg-6 col-md-6">
@@ -57,7 +58,6 @@
                     <h5>{{category}}</h5>
                 </div>
             </div>
-
             {% endfor %}
 
         </div>
@@ -69,7 +69,7 @@
 <!-- Product Section Begin -->
 <section class="product spad">
     <div class="container">
-        {% for category_wise_list in category_wise_lists   %}
+        {% for category_wise_list in category_wise_lists  %}
         <div class="row">
             {% for item in category_wise_list %}
             <div class="col-lg-3 col-md-6 col-sm-6">
@@ -77,13 +77,14 @@
                     <div class="product__item">
                         <div class="product__item__pic set-bg" data-setbg="{{item.image}}">
                             <div class="product__label">
+                                <span>{{item.category}}</span>
                             </div>
                         </div>
                         <div class="product__item__text">
                             <h6><a href="#">{{item.name}}</a></h6>
                             <div class="product__item__price">{{item.price}}</div>
                             <div class="cart_add">
-                                <a href="#">Add to cart</a>
+                                <a href="{% url 'user:add-to-cart' storename item.id %}">Add to cart</a>
                             </div>
                         </div>
                     </div>
