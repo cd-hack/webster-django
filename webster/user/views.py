@@ -150,7 +150,7 @@ def checkout(request, storename):
 def add_to_cart(request, storename, id):
     product = Product.objects.get(id=id)
     cart_item = CartProduct(
-        user=request.user, quantity=1, product=product, total=500)
+        user=request.user, quantity=1, product=product)
     cart_item.save()
     messages.info(request, 'Added To Cart')
     return redirect(reverse('user:cart', args=[storename]))

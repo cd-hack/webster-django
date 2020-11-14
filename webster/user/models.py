@@ -17,8 +17,8 @@ class CartProduct(models.Model):
     #total = models.DecimalField(decimal_places=2, max_digits=8)
     @property
     def total(self):
-       _total = self.quantity*self.product.price
-       return total
+        _total = self.quantity*self.product.price
+        return _total
 
 
 class OrderProduct(models.Model):
@@ -29,8 +29,8 @@ class OrderProduct(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
     @property
     def total(self):
-       _total = self.quantity*self.product.price
-       return total
+        _total = self.quantity*self.product.price
+        return total
 
 
 class Rating(models.Model):
