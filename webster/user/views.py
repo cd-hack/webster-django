@@ -47,7 +47,7 @@ def userLogout(request, storename):
 
 
 def home(request, storename):
-    website = get_object_or_404(Website, title=storename)
+    website = get_object_or_404(Website, websiteid=storename)
     categories = website.category_set.all()
     category1 = categories[0].product_set.all()[:4]
     category2 = categories[1].product_set.all()[:4]
@@ -58,7 +58,7 @@ def home(request, storename):
 
 
 def shop(request, storename):
-    website = get_object_or_404(Website, title=storename)
+    website = get_object_or_404(Website, websiteid=storename)
     #print("This is", website)
     products = Product.objects.filter(website=website)
     print(products)
@@ -67,7 +67,7 @@ def shop(request, storename):
 
 
 def shop_by_category(request, storename, category):
-    website = get_object_or_404(Website, title=storename)
+    website = get_object_or_404(Website, websiteid=storename)
     #category= Category.objects.filter(name=category,website=website)[0]
     products = Product.objects.filter(website=website)
     print(products)
@@ -76,12 +76,14 @@ def shop_by_category(request, storename, category):
 
 
 def about(request, storename):
-    context = {'storename': storename}
+    website = get_object_or_404(Website, websiteid=storename)
+    context = {'website': website,'storename':storename}
     return render(request, 'user/about.html', context)
 
 
 def contact(request, storename):
-    context = {'storename': storename}
+    website = get_object_or_404(Website, websiteid=storename)
+    context = {'website': website,'storename':storename}
     return render(request, 'user/contact.html', context)
 
 
@@ -111,7 +113,7 @@ def write_review(request, storename, id):
 def wishlist(request, storename):
     # print(request.user.is_user)
     profile = request.user
-    website = Website.objects.get(title=storename)
+    website = Website.objects.get(websiteid=storename)
     wishlists = profile.wishlist_set.filter(product__website=website)
     # print(wishlists[0].product.website)
     context = {'wishlists': wishlists, 'storename': storename}
@@ -121,7 +123,7 @@ def wishlist(request, storename):
 @is_authenticatd_user
 def cart(request, storename):
     profile = request.user
-    website = Website.objects.get(title=storename)
+    website = Website.objects.get(websiteid=storename)
     cart = profile.cartproduct_set.filter(product__website=website)
     grand_total = 0
     for item in cart:
@@ -137,7 +139,7 @@ def checkout(request, storename):
     if request.method == 'POST':
         cart_products = CartProduct.objects.filter(user=request.user)
         order_obj = Order.objects.create(
-            user=request.user, website=Website.objects.get(title=storename))
+            user=request.user, website=Website.objects.get(websiteid=storename))
         for cart_product in cart_products:
             order_product = OrderProduct.objects.create(
                 quantity=cart_product.quantity, product=cart_product.product, total=cart_product.total, order=order_obj)

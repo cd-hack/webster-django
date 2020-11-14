@@ -15,7 +15,7 @@
             </div>
             <div class="col-lg-6 col-md-6 col-sm-6">
                 <div class="breadcrumb__links">
-                    <a href="./index.html">Home</a>
+                    <a href="{% url 'user:home' storename%}">Home</a>
                     <span>Shop</span>
                 </div>
             </div>
@@ -32,12 +32,12 @@
                 <div class="col-lg-7 col-md-7">
                     <div class="shop__option__search">
                         <form action="#">
-                            <select>
+                           <!--  <select>
                                 <option value="">Categories</option>
                                 <option value="">Red Velvet</option>
                                 <option value="">Cup Cake</option>
                                 <option value="">Biscuit</option>
-                            </select>
+                            </select> -->
                             <input type="text" placeholder="Search">
                             <button type="submit"><i class="fa fa-search"></i></button>
                         </form>
@@ -84,22 +84,7 @@
 
         </div>
         <div class="shop__last__option">
-            <div class="row">
-                <div class="col-lg-6 col-md-6 col-sm-6">
-                    <div class="shop__pagination">
-                        <a href="#">1</a>
-                        <a href="#">2</a>
-                        <a href="#">3</a>
-                        <a href="#"><span class="arrow_carrot-right"></span></a>
-                    </div>
-                </div>
-                <div class="col-lg-6 col-md-6 col-sm-6">
-                    <div class="shop__last__text">
-                        <p>Showing 1-9 of 10 results</p>
-                    </div>
-                </div>
-            </div>
-        </div>
+            
     </div>
 </section>
 <!-- Shop Section End -->
