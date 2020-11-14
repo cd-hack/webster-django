@@ -4,6 +4,7 @@ from user import views
 app_name = 'user'
 
 urlpatterns = [
+    path('', views.landing_page, name='landing-page'),
     path('<storename>/login/', views.userLogin, name='login'),
     path('<storename>/register/', views.userRegister, name='register'),
     path('<storename>/', views.home, name='home'),

@@ -9,6 +9,10 @@ from django.contrib.auth.decorators import login_required
 from .decorators import *
 
 
+def landing_page(request):
+    context={}
+    return render(request, 'user/landing/index.html', context)
+
 def userLogin(request, storename):
     if request.method == 'POST':
         username = request.POST.get('username')
