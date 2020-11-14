@@ -82,6 +82,7 @@ class Website(models.Model):
     fburl = models.URLField()
     lnurl = models.URLField()
     image = models.ImageField()
+    websiteid=models.CharField(max_length=30,unique=True)
 
     def __str__(self):
         return self.title
@@ -95,7 +96,7 @@ class Category(models.Model):
 
 
 class FashionProduct(models.Model):
-    size = models.IntegerField()
+    size = models.CharField(max_length=5)
 
 
 class FoodProduct(models.Model):
@@ -114,6 +115,8 @@ class Product(models.Model):
     food = models.OneToOneField(
         FoodProduct, on_delete=models.CASCADE, null=True)
     image = models.URLField()
+    image320=models.URLField()
+    image480=models.URLField()
     available = models.BooleanField()
     instagramid=models.CharField(max_length=20,unique=True)
     date=models.DateTimeField()

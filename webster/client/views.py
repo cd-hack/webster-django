@@ -30,6 +30,19 @@ class ProfileViewSet(viewsets.ModelViewSet):
     filter_backends=[DjangoFilterBackend,]
     filterset_fields=['email','phone',]
 
+    def partial_update(self, request, pk=None):
+        if not (request.user.is_authenticated and request.user.id!=pk):
+            return Response(data={"status": "failed", "message": "Unknown credentials"})
+        password=request.data.get('password',None)
+        if password is None:
+            return Response(data={"status": "failed", "message": "Enter password"})
+        print(request.user)
+        if not request.user.check_password(password):
+            return Response(data={"status": "failed", "message": "Password entered is incorrect"})
+        serialized = ClientSerializer(request.user, data=request.data, partial=True)
+        serialized.is_valid()
+        return Response(data=serialized.data,status=status.HTTP_202_ACCEPTED)
+
 
 class WebsiteViewSet(viewsets.ModelViewSet):
     queryset = models.Website.objects.all()
@@ -53,7 +66,7 @@ class ProductView(ListAPIView):
     # filterset_fields=[]
 
     def get_queryset(self):
-        wwebsite = models.Website.objects.get(pk=self.request.data['wid'])
+        wwebsite = models.Website.objects.get(pk=self.request.GET.get('wid'))
         return wwebsite.product_set.all()
 
 
@@ -138,6 +151,8 @@ def fetchProducts(request,pk=None):
                     a = dict()
                     a['id'] = i['node']['id']
                     a['url'] = i['node']['display_url']
+                    a['url320']=i['node']['thumbnail_resources'][2]['src']
+                    a['url480']=i['node']['thumbnail_resources'][3]['src']
                     try:
                         a['description'] = i['node']['edge_media_to_caption']['edges'][0]['node']['text']
                     except IndexError:
@@ -172,7 +187,7 @@ def fetchProducts(request,pk=None):
                 obj, created = models.Product.objects.update_or_create(instagramid=i['id'], website=website, date=datetime.datetime.fromtimestamp(int(i['timestamp'])),
                 defaults={'name': prodDetails['name'], 'price': float(prodDetails['price']),
                  'description': prodDetails['description'], 'productType': int(prodDetails['productType']),
-                 'image': i['url'], 'available': prodDetails['available'], 'category': category,'fashion':fp,'food':fd})
+                 'image': i['url'], 'available': prodDetails['available'], 'category': category,'fashion':fp,'food':fd,'image320':i['url320'],'image480':i['url480']})
             except:
                 print('hello')
                 continue
@@ -205,5 +220,6 @@ def dashBoard(request,pk=None):
             dash['order_total']+=j.total
     dash['ordertoday']=website.order_set.filter(orderDate=datetime.date.today().strftime("%Y-%m-%d")).count()
     dash['totalorders']=website.order_set.all().count()
+    dash['usertotal']=website.userprofile_set.all().count()
     dash['status']='success'
     return Response(data=dash,status=status.HTTP_200_OK)

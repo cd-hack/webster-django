@@ -91,6 +91,7 @@ class ClientSerializer(serializers.ModelSerializer):
         except IntegrityError:
             raise serializers.ValidationError({"status":"failed","message":"Account with same email or phone number exists"})
 
+
 class WebsiteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Website
