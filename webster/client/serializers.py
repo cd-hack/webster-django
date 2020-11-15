@@ -143,8 +143,15 @@ class ProductSerializer(serializers.ModelSerializer):
         is_list_view = isinstance(self.instance, list)
         is_object_view=isinstance(self.instance,object)
         if is_list_view:
+            sum=0
+            prod=Product.objects.get(pk=ret['id'])
+            count=prod.rating_set.all().count()
+            for i in prod.rating_set.all():
+                sum+=i.rating
+            if count!=0: 
+                sum=float(sum)/count
             cat=Category.objects.get(pk=ret['category'])
-            extra_ret={'category':cat.name}
+            extra_ret={'category':cat.name,'rating':str(sum)}
             ret.pop('description',None)
             ret.pop('website',None)
             ret.pop('instagramid',None)
