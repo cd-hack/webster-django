@@ -30,7 +30,7 @@ class OrderProduct(models.Model):
     @property
     def total(self):
         _total = self.quantity*self.product.price
-        return total
+        return _total
 
 
 class Rating(models.Model):

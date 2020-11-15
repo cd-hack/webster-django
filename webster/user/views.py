@@ -10,10 +10,12 @@ from .decorators import *
 
 
 def landing_page(request):
-    context={}
+    context = {}
     return render(request, 'user/landing/index.html', context)
 
+
 def userLogin(request, storename):
+    context={'storename':storename}
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -24,11 +26,12 @@ def userLogin(request, storename):
             return redirect(reverse('user:home', args=[storename]))
         else:
             messages.info(request, 'Username or Password is Wrong')
-    context = {}
-    return render(request, 'user/login.html')
+
+    return render(request, 'user/login.html',context)
 
 
 def userRegister(request, storename):
+    context={'storename':storename}
     if request.method == 'POST':
         email = request.POST.get('email')
         phone = request.POST.get('phone')
@@ -42,7 +45,7 @@ def userRegister(request, storename):
             messages.info(request, 'Username already exist! Try login')
             return redirect(reverse('user:register', args=[storename]))
         return redirect(reverse('user:login', args=[storename]))
-    return render(request, 'user/register.html')
+    return render(request, 'user/register.html',context)
 
 
 def userLogout(request, storename):
@@ -81,13 +84,13 @@ def shop_by_category(request, storename, category):
 
 def about(request, storename):
     website = get_object_or_404(Website, websiteid=storename)
-    context = {'website': website,'storename':storename}
+    context = {'website': website, 'storename': storename}
     return render(request, 'user/about.html', context)
 
 
 def contact(request, storename):
     website = get_object_or_404(Website, websiteid=storename)
-    context = {'website': website,'storename':storename}
+    context = {'website': website, 'storename': storename}
     return render(request, 'user/contact.html', context)
 
 
@@ -108,7 +111,7 @@ def write_review(request, storename, id):
         rating_obj = Rating(userprofile=request.user,
                             product=product, rating=rating, review=review)
         rating_obj.save()
-        messages.info(request,'Review Added Successfully')
+        messages.info(request, 'Review Added Successfully')
         return redirect('user:product-details', storename=storename, id=id)
     return render(request, 'user/add-review.html', context)
 
@@ -146,7 +149,7 @@ def checkout(request, storename):
             user=request.user, website=Website.objects.get(websiteid=storename))
         for cart_product in cart_products:
             order_product = OrderProduct.objects.create(
-                quantity=cart_product.quantity, product=cart_product.product, total=cart_product.total, order=order_obj)
+                quantity=cart_product.quantity, product=cart_product.product, order=order_obj)
             cart_product.delete()
         return redirect('user:home', storename=storename)
     return render(request, 'user/confirm-order.html', context)
