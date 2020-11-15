@@ -50,7 +50,7 @@ def userRegister(request, storename):
 
 def userLogout(request, storename):
     logout(request)
-    return redirect('user:shop', storename=storename)
+    return redirect('user:home', storename=storename)
 
 
 def home(request, storename):
@@ -96,9 +96,10 @@ def contact(request, storename):
 
 
 def product_details(request, storename, id):
+    website = get_object_or_404(Website, websiteid=storename)
     product = Product.objects.get(id=id)
     ratings = Rating.objects.filter(product=product)
-    context = {'storename': storename, 'product': product, 'ratings': ratings}
+    context = {'storename': storename, 'product': product, 'ratings': ratings,'website': website}
     return render(request, 'user/product-details.html', context)
 
 
@@ -124,7 +125,8 @@ def wishlist(request, storename):
     website = Website.objects.get(websiteid=storename)
     wishlists = profile.wishlist_set.filter(product__website=website)
     # print(wishlists[0].product.website)
-    context = {'wishlists': wishlists, 'storename': storename,'website':website}
+    context = {'wishlists': wishlists,
+               'storename': storename, 'website': website}
     return render(request, 'user/wishlist.html', context)
 
 
@@ -137,7 +139,7 @@ def cart(request, storename):
     for item in cart:
         grand_total += item.total
     context = {'cart': cart, 'storename': storename,
-               'grand_total': grand_total}
+               'grand_total': grand_total, 'website': website}
     return render(request, 'user/cart.html', context)
 
 

@@ -44,11 +44,11 @@
                     <p>{{product.description}}</p>
                     
                     <div class="product__details__option">
-                        <div class="quantity">
+                        <!-- <div class="quantity">
                             <div class="pro-qty">
                                 <input type="text" value="1">
                             </div>
-                        </div>
+                        </div> -->
                         <a href="{% url 'user:add-to-cart' storename product.id %}" class="primary-btn">Add to cart</a>
                         <a href="{% url 'user:add-to-wishlist' storename product.id %}" class="heart__btn"><span
                                 class="icon_heart_alt"></span></a>
