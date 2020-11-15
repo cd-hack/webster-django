@@ -1,0 +1,68 @@
+{% extends 'user/base.html' %}
+{% load static %}
+{% block content %}
+
+<!-- Contact Section Begin -->
+<section class="contact spad">
+    <div class="container">
+
+        <div class="contact__address">
+            <div class="row">
+                <div class="col-lg-4 col-md-6 col-sm-6">
+                    <div class="contact__address__item">
+                        <h6>{{website.client.profile.name}}</h6>
+                        <ul>
+                            <li>
+                                <span class="fa fa-google"></span>
+                                <p><a href="mailto:{{website.client.profile.email}}">{{website.client.profile.email}}</a></p>
+                            </li>
+                            <li><span class="fa fa-facebook"></span>
+                                <p><a href="{{website.fburl}}">{{website.fburl}}</a></p>
+                            </li>
+                            <li><span class="fa fa-instagram"></span>
+                                <p><a href="{{website.ighandle}}">{{website.ighandle}}</a></p>
+                            </li>
+                            <li><span class="fa fa-linkedin"></span>
+                                <p><a href="{{website.lnurl}}">{{website.lnurl}}</a></p>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+               
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="contact__text">
+                    <h3>Contact With us</h3>
+                    <ul>
+                        <li>Representatives or Advisors are available:</li>
+                        <li>Mon-Fri: 5:00am to 9:00pm</li>
+                        <li>Sat-Sun: 6:00am to 9:00pm</li>
+                    </ul>
+                    <img src="img/cake-piece.png" alt="">
+                </div>
+            </div>
+            <div class="col-lg-8">
+                <div class="contact__form">
+                    <form action="#">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <input type="text" placeholder="Name">
+                            </div>
+                            <div class="col-lg-6">
+                                <input type="text" placeholder="Email">
+                            </div>
+                            <div class="col-lg-12">
+                                <textarea placeholder="Message"></textarea>
+                                <button type="submit" class="site-btn">Send Us</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Contact Section End -->
+{% endblock content %}
