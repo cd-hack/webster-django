@@ -15,7 +15,7 @@ def landing_page(request):
 
 
 def userLogin(request, storename):
-    context={'storename':storename}
+    context = {'storename': storename}
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -27,11 +27,11 @@ def userLogin(request, storename):
         else:
             messages.info(request, 'Username or Password is Wrong')
 
-    return render(request, 'user/login.html',context)
+    return render(request, 'user/login.html', context)
 
 
 def userRegister(request, storename):
-    context={'storename':storename}
+    context = {'storename': storename}
     if request.method == 'POST':
         email = request.POST.get('email')
         phone = request.POST.get('phone')
@@ -45,7 +45,7 @@ def userRegister(request, storename):
             messages.info(request, 'Username already exist! Try login')
             return redirect(reverse('user:register', args=[storename]))
         return redirect(reverse('user:login', args=[storename]))
-    return render(request, 'user/register.html',context)
+    return render(request, 'user/register.html', context)
 
 
 def userLogout(request, storename):
@@ -69,7 +69,8 @@ def shop(request, storename):
     #print("This is", website)
     products = Product.objects.filter(website=website)
     print(products)
-    context = {'storename': storename, 'products': products}
+    context = {'storename': storename,
+               'products': products, 'website': website}
     return render(request, 'user/shop.html', context)
 
 
@@ -123,7 +124,7 @@ def wishlist(request, storename):
     website = Website.objects.get(websiteid=storename)
     wishlists = profile.wishlist_set.filter(product__website=website)
     # print(wishlists[0].product.website)
-    context = {'wishlists': wishlists, 'storename': storename}
+    context = {'wishlists': wishlists, 'storename': storename,'website':website}
     return render(request, 'user/wishlist.html', context)
 
 
