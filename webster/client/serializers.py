@@ -121,6 +121,16 @@ class WebsiteSerializer(serializers.ModelSerializer):
         #     raise serializers.ValidationError({"status":"failed","message":"clients are only permitted to create website"})
         return super().validate(attrs)
 
+    def to_representation(self, instance):
+        ret= super().to_representation(instance)
+        is_object_view=isinstance(self.instance,object)
+        if is_object_view:
+            website=Website.objects.get(pk=ret['id'])
+            extra_ret={'category':[]}
+            for i in website.category_set.all():
+                extra_ret['category'].append(i.name)
+            ret.update(extra_ret)
+        return ret
 
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
