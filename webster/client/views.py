@@ -197,6 +197,7 @@ def fetchProducts(request,pk=None):
                 fd=None
                 prodDetails = json.loads(i['description'])
                 if not all(x in prodDetails for x in ['name', 'price', 'description', 'productType', 'available', 'category']):
+                    print('bro no')
                     continue
                 if prodDetails['productType'] == 1:
                     if 'size' not in prodDetails:
@@ -204,17 +205,20 @@ def fetchProducts(request,pk=None):
                     fp=models.FashionProduct.objects.create(size=prodDetails['size'])
                 if prodDetails['productType'] == 2:
                     if not all(x in prodDetails for x in ['veg', 'foodType']):
+                        print('hey no')
                         continue
                     fd=models.FoodProduct.objects.create(veg=prodDetails['veg'],foodType=prodDetails['foodType'])
                 category = categories.get(name=prodDetails['category'])
                 if category is None:
+                    print('no')
                     continue
                 obj, created = models.Product.objects.update_or_create(instagramid=i['id'], website=website, date=datetime.datetime.fromtimestamp(int(i['timestamp'])),
                 defaults={'name': prodDetails['name'], 'price': float(prodDetails['price']),
                  'description': prodDetails['description'], 'productType': int(prodDetails['productType']),
                  'image': i['url'], 'available': prodDetails['available'], 'category': category,'fashion':fp,'food':fd,'image320':i['url320'],'image480':i['url480']})
+                print(created)
             except:
-                print('hello')
+                print('hello brooooooooo')
                 continue
         return Response({'status': 'success', 'message': 'Products successfully fetched'}, status=status.HTTP_201_CREATED)
 
