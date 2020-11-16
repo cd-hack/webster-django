@@ -95,3 +95,21 @@ footer.page-footer {
 
 
 /* Get Started */
+
+/* logo */
+
+#webster-logo{
+  height: 50px;
+  width: 50px;
+  margin-top: 9px;
+  margin-left: 150px;
+}
+
+@media only screen and (max-width : 750px) {
+  #webster-logo{
+    height: 50px;
+    width: 50px;
+    margin-top: 6px;
+    margin-left: 22rem;
+  }
+}

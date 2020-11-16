@@ -15,21 +15,20 @@
 <body>
   <nav class="white" role="navigation">
     <div class="nav-wrapper container">
-      <a id="logo-container" href="#" class="brand-logo">Webster</a>
+      <a id="logo-container" href="#" class="brand-logo"> Webster</a>
+      <img id="webster-logo" src="https://cdn.discordapp.com/attachments/768364863940460587/777782075955871764/logo.png" alt="logo">
       <ul class="right hide-on-med-and-down">
-        <li><a href="#">Home</a></li>
-        <li><a href="#">About</a></li>
-        <li><a href="#">Services</a></li>
-        <li><a href="#">Team</a></li>
-        <li><a href="#">Contact</a></li>
+        <li><a href="./index.html">Home</a></li>
+        <li><a href="#about-webster">About</a></li>
+        <li><a href="#contact-us">Contact</a></li>
+        <li><a href="#team">Team</a></li>
       </ul>
 
       <ul id="nav-mobile" class="sidenav">
-        <li><a href="#">Home</a></li>
-        <li><a href="#">About</a></li>
-        <li><a href="#">Services</a></li>
-        <li><a href="#">Team</a></li>
-        <li><a href="#">Contact</a></li>
+        <li><a href="./index.html">Home</a></li>
+        <li><a href="#about-webster">About</a></li>
+        <li><a href="#contact-us">Contact</a></li>
+        <li><a href="#team">Team</a></li>
       </ul>
       <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
     </div>
@@ -52,30 +51,23 @@
     <div class="parallax"><img src="{% static 'user/landing/images/main-bg.jpg' %}" alt="Unsplashed background img 1"></div>
   </div>
 
-
-  <div class="container">
-    <div class="section">
-
-      <div class="row">
-        <div class="col s12 center">
-          <h3><i class="mdi-content-send brown-text"></i></h3>
-          <h4>Contact Us</h4>
-          <p class="left-align light">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam scelerisque id nunc nec volutpat. Etiam pellentesque tristique arcu, non consequat magna fermentum ac. Cras ut ultricies eros. Maecenas eros justo, ullamcorper a sapien id, viverra ultrices eros. Morbi sem neque, posuere et pretium eget, bibendum sollicitudin lacus. Aliquam eleifend sollicitudin diam, eu mattis nisl maximus sed. Nulla imperdiet semper molestie. Morbi massa odio, condimentum sed ipsum ac, gravida ultrices erat. Nullam eget dignissim mauris, non tristique erat. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae;</p>
+  <section id="about-webster">
+    <div class="container" data-aos="fade-out">
+      <div class="section">
+        <div class="row">
+          <div class="col s12 center">
+            <h3><i class="mdi-content-send brown-text"></i></h3>
+            <h2>About Webster</h2>
+            <p class="left-align light">Webster is a service app that helps people to maintain a website for their business needs with just an Instagram account. Anyone with an Instagram account can download our app and register the account with us. The client can then advertise their products through their Instagram posts as usual and we scrape it from the profile of the client, and generate a website with a template selected by the client. Everytime the client updates his insta account with a new product it is automatically added to the website, and users can purchase it from the site.
+            </p>
+          </div>
         </div>
       </div>
-
     </div>
-  </div>
+  </section>
 
 
   <div class="parallax-container valign-wrapper">
-    <div class="section no-pad-bot">
-      <div class="container">
-        <div class="row center">
-          <h5 class="header col s12 light">A modern responsive front-end framework based on Material Design</h5>
-        </div>
-      </div>
-    </div>
     <div class="parallax"><img src="{% static 'user/landing/images/background3.jpg' %}" alt="Unsplashed background img 3"></div>
   </div>
 
@@ -107,59 +99,31 @@
           </div>
         </div>
       </div>      
-    </div>
-    
+    </div> 
   </section>
 
-
-  <!-- <div class="container">
-    <div class="section">
-
-        Icon Section  
-      <div class="row">
-        <div class="col s12 m4">
-          <div class="icon-block">
-            <h2 class="center brown-text"><i class="material-icons">flash_on</i></h2>
-            <h5 class="center">Speeds up development</h5>
-
-            <p class="light">We did most of the heavy lifting for you to provide a default stylings that incorporate our custom components. Additionally, we refined animations and transitions to provide a smoother experience for developers.</p>
-          </div>
-        </div>
-
-        <div class="col s12 m4">
-          <div class="icon-block">
-            <h2 class="center brown-text"><i class="material-icons">group</i></h2>
-            <h5 class="center">User Experience Focused</h5>
-
-            <p class="light">By utilizing elements and principles of Material Design, we were able to create a framework that incorporates components and animations that provide more feedback to users. Additionally, a single underlying responsive system across all platforms allow for a more unified user experience.</p>
-          </div>
-        </div>
-
-        <div class="col s12 m4">
-          <div class="icon-block">
-            <h2 class="center brown-text"><i class="material-icons">settings</i></h2>
-            <h5 class="center">Easy to work with</h5>
-
-            <p class="light">We have provided detailed documentation as well as specific code examples to help new users get started. We are also always open to feedback and can answer any questions a user may have about Materialize.</p>
+  <section id="contact-us">
+    <div class="container" data-aos="fade-in">
+      <div class="section">
+        <div class="row">
+          <div class="col s12 center">
+            <h3><i class="mdi-content-send brown-text"></i></h3>
+            <h2>Have anything to convey</h2>
+            <br>
+            <h6>We would love to hear it from you</h6>
+            <br>
+            <a class="btn" href="mailto:webster@gmail.com">Send Mail</a>
           </div>
         </div>
       </div>
-
     </div>
-  </div> -->
-
-
+  </section>
+    
   <div class="parallax-container valign-wrapper">
-    <div class="section no-pad-bot">
-      <div class="container">
-        <div class="row center">
-          <h5 class="header col s12 light">A modern responsive front-end framework based on Material Design</h5>
-        </div>
-      </div>
-    </div>
     <div class="parallax"><img src="{% static 'user/landing/images/background2.jpg' %}" alt="Unsplashed background img 2"></div>
   </div>
 
+  <br>
   
 
   <footer class="page-footer teal">
@@ -171,29 +135,23 @@
 
 
         </div>
-        <div class="col l3 s12">
-          <h5 class="white-text">Settings</h5>
-          <ul>
-            <li><a class="white-text" href="#!">Link 1</a></li>
-            <li><a class="white-text" href="#!">Link 2</a></li>
-            <li><a class="white-text" href="#!">Link 3</a></li>
-            <li><a class="white-text" href="#!">Link 4</a></li>
-          </ul>
-        </div>
-        <div class="col l3 s12">
-          <h5 class="white-text">Connect</h5>
-          <ul>
-            <li><a class="white-text" href="#!">Link 1</a></li>
-            <li><a class="white-text" href="#!">Link 2</a></li>
-            <li><a class="white-text" href="#!">Link 3</a></li>
-            <li><a class="white-text" href="#!">Link 4</a></li>
-          </ul>
-        </div>
+        <div class="col l3 s12"></div>
+        <section id="team">
+          <div class="col l3 s12">
+            <h5 class="white-text">Connect</h5>
+            <ul>
+              <li><a class="white-text" href="mailto:webster@gmail.com">Link 1</a></li>
+              <li><a class="white-text" href="mailto:webster@gmail.com">Link 2</a></li>
+              <li><a class="white-text" href="mailto:webster@gmail.com">Link 3</a></li>
+              <li><a class="white-text" href="mailto:webster@gmail.com">Link 4</a></li>
+            </ul>
+          </div>
+        </section>
       </div>
     </div>
     <div class="footer-copyright">
       <div class="container">
-      Made by <a class="brown-text text-lighten-3" href="http://materializecss.com">Materialize</a>
+        <p style="text-align: center;">&copy; cd_hack.inc 2020</p>
       </div>
     </div>
   </footer>
