@@ -1,6 +1,5 @@
 import re
 import requests
-import json
 from rest_framework import serializers
 from client.models import Profile, Website, Product,FashionProduct,FoodProduct,Category
 # from user.models import Wishlist,OrderProduct,Rating
@@ -102,21 +101,22 @@ class WebsiteSerializer(serializers.ModelSerializer):
             }
         }
 
-    def igexists(self, ighandle):
-        url = 'https://www.instagram.com/{}/?__a=1'.format(ighandle)
-        response = requests.get(url)
-        userDetails = json.loads(response.text)
-        if 'graphql' not in userDetails:
-            return {'status': True, 'message': 'The given Instagram Profile does not exist !!'}
-        else:
-            return {'status': userDetails['graphql']['user']['is_private'], 'message': 'The given Instagram Profile is Private !!'}
+    # def igexists(self, ighandle):
+    #     url = 'https://www.instagram.com/{}/?__a=1'.format(ighandle)
+    #     userDetails = requests.get(url).json()
+    #     if 'graphql' not in userDetails:
+    #         return {'status': True, 'message': 'The given Instagram Profile does not exist !!'}
+    #     else:
+    #         return {'status': userDetails['graphql']['user']['is_private'], 'message': 'The given Instagram Profile is Private !!'}
 
     def validate(self, attrs):
         if not 1 <= attrs['templatetype'] <= 2:
             raise serializers.ValidationError("Invalid template type")
-        igstatus = self.igexists(attrs['ighandle'])
-        if igstatus['status']:
-            raise serializers.ValidationError({"status":"failed","message":igstatus['message']})
+        # if len(attrs['iguserid'])!=10:
+        #     raise serializers.ValidationError("Invalid Instagram User ID")
+        # igstatus = self.igexists(attrs['ighandle'])
+        # if igstatus['status']:
+        #     raise serializers.ValidationError({"status":"failed","message":igstatus['message']})
         # if attrs['client'] is None:
         #     raise serializers.ValidationError({"status":"failed","message":"clients are only permitted to create website"})
         return super().validate(attrs)

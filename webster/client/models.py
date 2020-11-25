@@ -83,6 +83,7 @@ class Website(models.Model):
     lnurl = models.URLField()
     image = models.ImageField()
     websiteid=models.CharField(max_length=30,unique=True)
+    iguserid=models.CharField(max_length=20)
 
     def __str__(self):
         return self.title
@@ -114,11 +115,11 @@ class Product(models.Model):
         FashionProduct, on_delete=models.CASCADE, null=True)
     food = models.OneToOneField(
         FoodProduct, on_delete=models.CASCADE, null=True)
-    image = models.URLField()
-    image320=models.URLField()
-    image480=models.URLField()
+    image = models.URLField(max_length=350)
+    image320=models.URLField(max_length=350)
+    image480=models.URLField(max_length=350)
     available = models.BooleanField()
-    instagramid=models.CharField(max_length=20,unique=True)
+    instagramid=models.CharField(max_length=30,unique=True)
     date=models.DateTimeField()
     category=models.ForeignKey(Category,on_delete=models.CASCADE)
 
